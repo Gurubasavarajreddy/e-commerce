@@ -2,9 +2,12 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import './BannerComponent.style.css';
-function BannerComponent({ name, description, imageUrl }) {
+import { useHistory } from 'react-router-dom';
+
+function BannerComponent({ name, description, imageUrl, key, id }) {
+  const history = useHistory();
   return (
     <Grid
       sx={{
@@ -25,6 +28,7 @@ function BannerComponent({ name, description, imageUrl }) {
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          alignItems: 'center',
           width: '50%',
           '>*': {
             margin: '1%',
@@ -33,6 +37,19 @@ function BannerComponent({ name, description, imageUrl }) {
       >
         <Typography>{name}</Typography>
         <Typography>{description}</Typography>
+        <Button
+          sx={{
+            backgroundColor: '#800000',
+            color: 'black',
+            fontWeight: '800',
+            width: '50%',
+          }}
+          onClick={() => {
+            history.push(`/products/${key}/${id}`);
+          }}
+        >
+          Explore {name}
+        </Button>
       </Box>
     </Grid>
   );

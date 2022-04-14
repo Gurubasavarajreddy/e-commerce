@@ -9,9 +9,14 @@ import CardActions from '@mui/material/CardActions';
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 function ProductCard({ product }) {
-  const { name, imageURL, stock, price, sku, description } = product;
+  const { name, imageURL, stock, price, sku, description, id } = product;
+  const cartState = useSelector((state) => state);
+  const isAuthenticated = localStorage.getItem('auth');
+  const dispatch = useDispatch();
+  const history = useHistory();
   return (
     <div>
       {' '}
@@ -47,7 +52,32 @@ function ProductCard({ product }) {
             <Typography aria-label="add to favorites">
               MRP {''}RS.{price}
             </Typography>
-            <Button>Buy Now</Button>
+            <Button
+              onClick={() => {
+                if (isAuthenticated) {
+                  if (cartState.cartData.findIndex((d) => d.id === id) > -1) {
+                    dispatch({
+                      payload: { state: true },
+                      type: 'CART_MODAL_STATE',
+                    });
+                    dispatch({
+                      payload: { ...product, ops: 'increment' },
+                      type: 'UPDATE_CART',
+                    });
+                  } else {
+                    dispatch({
+                      payload: { state: true },
+                      type: 'CART_MODAL_STATE',
+                    });
+                    dispatch({ payload: product, type: 'SET_CART' });
+                  }
+                } else {
+                  history.push('/login');
+                }
+              }}
+            >
+              Buy Now
+            </Button>
           </CardActions>
         </Card>
       </Grid>
